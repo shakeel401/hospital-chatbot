@@ -8,10 +8,10 @@ app = FastAPI()
 # Include the chat router
 app.include_router(chat_router)
 
-@app.post("/")
+@app.get("/")
 def read_route():
     return {"message": "Hospital bot API is running"}
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000))  # Use PORT from env or default to 8000
+    port = int(os.getenv("PORT", 8000))  # Use PORT assigned by Render
     uvicorn.run(app, host="0.0.0.0", port=port)
