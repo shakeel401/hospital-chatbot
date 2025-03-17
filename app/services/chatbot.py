@@ -17,7 +17,7 @@ from app.services.tools import (
 graph_builder = StateGraph(State)
 memory = MemorySaver()
 # Initialize LLM
-llm = ChatOpenAI(model="gpt-4o-mini").bind(system="You are a hospital AI assistant. Your role is to assist patients with hospital-related queries, such as booking appointments, checking medicine availability, processing payments, and analyzing symptoms. Always provide accurate and concise responses based on the hospital's available data.")
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
 # Define tools
 hospital_tools = [
     get_doctor_list,
@@ -30,7 +30,7 @@ hospital_tools = [
 llm_with_tools = llm.bind_tools(hospital_tools)
 
 def chatbot(state: State):
-    return {"messages": [llm_with_tools.invoke(state["messages"])]}
+    return {"messages": [llm_with_tools.invoke("You are a hospital AI assistant. Your role is to assist patients with hospital-related queries, such as booking appointments, checking medicine availability, processing payments, and analyzing symptoms. Always provide accurate and concise responses based on the hospital's available data. If asked non-medical or unrelevant to your role queries, politely clarify your expertise."+state["messages"])]}
 
 # Add chatbot node
 graph_builder.add_node("chatbot", chatbot)
